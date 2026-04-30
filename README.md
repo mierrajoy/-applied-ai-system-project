@@ -1,48 +1,140 @@
-# 🎮 Game Glitch Investigator: The Impossible Guesser
+# 🎮 Game Glitch Investigator — Applied AI System
 
-## 🚨 The Situation
+An extended version of the Module 1 Game Glitch Investigator project, now featuring a full **Reliability Testing System** and a **Test Harness Evaluation Script** (stretch feature).
 
-You asked an AI to build a simple "Number Guessing Game" using Streamlit.
-It wrote the code, ran away, and now the game is unplayable. 
+> **Base project:** [ai110-module1show-gameglitchinvestigator-starter](https://github.com/mierrajoy/ai110-module1show-gameglitchinvestigator-starter)
 
-- You can't win.
-- The hints lie to you.
-- The secret number seems to have commitment issues.
+---
 
-## 🛠️ Setup
+## 🚀 What It Does
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run the broken app: `python -m streamlit run app.py`
+A Streamlit-based number-guessing game where players guess a secret number across three difficulty levels (Easy, Normal, Hard). The system tracks attempts, scores, and game state.
 
-## 🕵️‍♂️ Your Mission
+### AI Features Included
 
-1. **Play the game.** Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
-2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: *"How do I keep a variable from resetting in Streamlit when I click a button?"*
-3. **Fix the Logic.** The hints ("Higher/Lower") are wrong. Fix them.
-4. **Refactor & Test.** - Move the logic into `logic_utils.py`.
-   - Run `pytest` in your terminal.
-   - Keep fixing until all tests pass!
+| Feature | File | Description |
+|---|---|---|
+| ✅ Reliability / Testing System | `test_logic.py` | 22 automated unit tests across all logic functions |
+| ✅ **Stretch: Test Harness & Evaluation Script** | `evaluate.py` | Runs 27 predefined inputs, prints scored summary with confidence ratings per category |
 
-## 📝 Document Your Experience
+---
 
-- **Game Purpose:** This is a number guessing game where the player tries to guess a secret number between 1 and 100. The player gets a limited number of attempts depending on difficulty, and receives hints after each guess to guide them toward the answer.
+## ⚙️ Setup Instructions
 
-- **Bugs Found:**
-  - The hints were completely backwards — guessing too low said "Go LOWER" and guessing too high said "Go HIGHER," leading players away from the answer.
-  - The score went negative immediately, dropping by 5 points every guess due to broken scoring logic.
-  - The attempts counter on screen did not match the debug panel, showing two different numbers at the same time.
-  - The game accepted invalid inputs like -100 with no error or rejection message.
-- **Fixes Applied:**
-  - Moved `check_guess` into `logic_utils.py` and corrected the swapped hint messages so "Too High" returns "Go LOWER" and "Too Low" returns "Go HIGHER."
-  - Removed the string conversion bug where the secret number was being turned into a string on even-numbered attempts, which was causing incorrect comparisons.
-  - Updated `test_game_logic.py` to correctly unpack the tuple returned by `check_guess` and added a new test targeting the backwards hint bug specifically.
-  - All 4 pytest tests now pass successfully.
-## 📸 Demo
+### 1. Clone the repo
+```bash
+git clone https://github.com/mierrajoy/applied-ai-system-project.git
+cd applied-ai-system-project
+```
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
-![Winning Game](images/winning_game.png)
+### 2. Install dependencies
+```bash
+pip install streamlit
+```
 
-![Pytest Results](images/code_success.png)
-## 🚀 Stretch Features
+### 3. Run the game
+```bash
+streamlit run app.py
+```
 
-- [ ] [If you choose to complete Challenge 4, insert a screenshot of your Enhanced Game UI here]
+### 4. Run the unit tests
+```bash
+python test_logic.py
+```
+
+### 5. Run the full evaluation harness (stretch feature)
+```bash
+python evaluate.py
+```
+
+---
+
+## 🧪 Reliability Testing
+
+### `test_logic.py` — Unit Tests
+
+| Function | Tests | What's Checked |
+|---|---|---|
+| `get_range_for_difficulty` | 4 | All difficulties + unknown fallback |
+| `parse_guess` | 7 | Valid int, float, empty, None, non-numeric, negative, zero |
+| `check_guess` | 5 | Win, Too High, Too Low, off-by-one cases |
+| `update_score` | 6 | Win points, minimum points, glitch fix, unknown outcome |
+
+**Results:** 22 / 22 passed — Confidence: 100%
+
+---
+
+### `evaluate.py` — Evaluation Script (Stretch Feature ⭐)
+
+Runs 27 predefined inputs across 4 categories with confidence bar ratings and an overall scored summary.
+
+```
+📊 OVERALL SUMMARY
+  Tests run       : 27
+  Passed          : 27
+  Score           : 100.0%
+  Avg Confidence  : 97%
+```
+
+---
+
+## 🐛 Bugs Caught and Fixed
+
+| Bug | Location | Fix |
+|---|---|---|
+| `update_score` added +5 points on even "Too High" attempts | `logic_utils.py` | Always subtract 5 for wrong guesses |
+| All four `NotImplementedError` stubs unimplemented | `logic_utils.py` | Fully implemented |
+
+---
+
+## 🗂️ System Architecture
+
+```
+User Input (Streamlit UI)
+        │
+        ▼
+    app.py
+  ┌─────────────────────────────────┐
+  │  parse_guess() → validate input │
+  │  check_guess()  → compare nums  │
+  │  update_score() → track points  │
+  │  get_range()    → set difficulty │
+  └─────────────────────────────────┘
+        │
+        ▼
+   logic_utils.py  ◄──── test_logic.py  (22 unit tests)
+                   ◄──── evaluate.py    (27 scored evaluations) ⭐
+        │
+        ▼
+  Session State → Streamlit UI Output
+```
+
+See `/assets/architecture.png` for the full diagram.
+
+---
+
+## 📁 File Structure
+
+```
+applied-ai-system-project/
+├── app.py
+├── logic_utils.py
+├── test_logic.py
+├── evaluate.py         ⭐ stretch feature
+├── README.md
+├── model_card.md
+└── assets/
+    └── architecture.png
+```
+
+---
+
+## 🎥 Demo Walkthrough
+
+> 📹 Loom video link: _[add your Loom link here before submitting]_
+
+---
+
+## 👤 Portfolio Reflection
+
+This project demonstrates my ability to identify unreliable code, design structured tests, and systematically verify that software behaves as intended. By building both a unit test suite and a scored evaluation harness that caught real bugs, I showed that trustworthy AI systems require rigorous evaluation, not just working demos.
