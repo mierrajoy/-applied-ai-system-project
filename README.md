@@ -131,7 +131,7 @@ applied-ai-system-project/
 
 ## 🎥 Demo Walkthrough
 
-> 📹 Loom video link: _[add your Loom link here before submitting]_
+> 📹 Loom video link: https://www.loom.com/share/9061789f03e94c13bac2693fd11eb577
 
 ---
 
